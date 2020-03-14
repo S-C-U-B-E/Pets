@@ -2,11 +2,13 @@ package com.example.pets;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -17,6 +19,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.example.pets.data.PetsContract.PetsEntry;
 
 public class CatalogActivity extends AppCompatActivity {
+
+    private PetsDbHelper mDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +36,7 @@ public class CatalogActivity extends AppCompatActivity {
             }
         });
 
+         mDbHelper = new PetsDbHelper(this);
         displayDatabaseInfo();
     }
 
@@ -42,6 +47,18 @@ public class CatalogActivity extends AppCompatActivity {
         // This adds menu items to the app bar.
         getMenuInflater().inflate(R.menu.menu_catalog, menu);
         return true;
+    }
+
+    private void insertPetsData(){
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(PetsEntry.COLUMN_PETS_NAME, "Pepsi");
+        values.put(PetsEntry.COLUMN_PETS_BREED, "Golden Retriver");
+        values.put(PetsEntry.COLUMN_PETS_GENDER, PetsEntry.GENDER_MALE);
+        values.put(PetsEntry.COLUMN_PETS_WEIGHT, 7);
+
+        long rowId = db.insert(PetsEntry.TABLE_NAME, null, values);
     }
 
     private void displayDatabaseInfo() {
@@ -65,5 +82,22 @@ public class CatalogActivity extends AppCompatActivity {
             // resources and makes it invalid.
             cursor.close();
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // User clicked on a menu option in the app bar overflow menu
+        switch (item.getItemId()) {
+            // Respond to a click on the "Insert dummy data" menu option
+            case R.id.action_insert_dummy_data:
+                insertPetsData();
+                displayDatabaseInfo();
+                return true;
+            // Respond to a click on the "Delete all entries" menu option
+            case R.id.action_delete_all_entries:
+                // Do nothing for now
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

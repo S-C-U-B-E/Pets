@@ -10,19 +10,19 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources>
-    <!-- The app branding color for the app bar -->
-    <color name="colorPrimary">#F0514B</color>
+<!-- Options menu for the CatalogActivity -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".CatalogActivity">
 
-    <!-- Darker variant for the status bar and contextual app bars -->
-    <color name="colorPrimaryDark">#C0403C</color>
+    <item
+        android:id="@+id/action_insert_dummy_data"
+        android:title="@string/action_insert_dummy_data"
+        app:showAsAction="never" />
 
-    <!-- Accent color for UI controls like checkboxes and text fields -->
-    <color name="colorAccent">#F0514B</color>
-
-    <!-- Primary color for the editor -->
-    <color name="editorColorPrimary">#2D3640</color>
-
-    <!-- Primary dark color for the editor -->
-    <color name="editorColorPrimaryDark">#394450</color>
-</resources>
+    <item
+        android:id="@+id/action_delete_all_entries"
+        android:title="@string/action_delete_all_entries"
+        app:showAsAction="never" />
+</menu>

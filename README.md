@@ -1,6 +1,6 @@
 # Pets
 
-Just an android application how database can be used in android.
+Just an android application to undersatnd how database can be used in android.
 
 Used SQLite
 

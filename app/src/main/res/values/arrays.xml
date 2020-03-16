@@ -7,4 +7,5 @@
         <item>@string/gender_male</item>
         <item>@string/gender_female</item>
     </string-array>
+
 </resources>

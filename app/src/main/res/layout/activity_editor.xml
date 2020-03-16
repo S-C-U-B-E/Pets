@@ -12,6 +12,7 @@
 
     <!-- Overview category -->
     <LinearLayout
+        android:id="@+id/Container_overview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -23,6 +24,7 @@
 
         <!-- Input fields -->
         <LinearLayout
+            android:id="@+id/Input_field_name_breed"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="2"
@@ -102,15 +104,22 @@
             <!-- Weight field -->
             <EditText
                 android:id="@+id/edit_pet_weight"
-                android:hint="@string/hint_pet_weight"
                 android:inputType="number"
-                style="@style/EditorFieldStyle" />
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:maxWidth="64dp"/>
 
             <!-- Units for weight (kg) -->
             <TextView
                 android:id="@+id/label_weight_units"
                 android:text="@string/unit_pet_weight"
-                style="@style/EditorUnitsStyle"/>
+                style="@style/EditorUnitsStyle"
+                android:layout_toEndOf="@+id/edit_pet_weight"
+                android:layout_toRightOf="@+id/edit_pet_weight"/>
         </RelativeLayout>
     </LinearLayout>
 </LinearLayout>
+
+
+<!--Previous Style of Measurement Edit Text -->
+<!--style="@style/EditorFieldStyle" -->

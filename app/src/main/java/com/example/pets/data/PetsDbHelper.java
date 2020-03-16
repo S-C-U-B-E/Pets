@@ -33,7 +33,6 @@ public class PetsDbHelper extends SQLiteOpenHelper {
         // Execute the SQL statement
         db.execSQL(SQL_CREATE_PETS_TABLE);
 
-
     }
 
     @Override

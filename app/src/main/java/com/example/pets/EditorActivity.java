@@ -16,8 +16,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 
-import com.example.pets.data.PetsContract.PetsEntry;
+import  com.example.pets.data.PetsContract.PetsEntry;
 import com.example.pets.data.PetsDbHelper;
+
 
 public class EditorActivity extends AppCompatActivity {
 
@@ -30,7 +31,7 @@ public class EditorActivity extends AppCompatActivity {
     /** EditText field to enter the pet's weight */
     private EditText mWeightEditText;
 
-    /** EditText field to enter the pet's gender */
+    /** Spinner field to enter the pet's gender */
     private Spinner mGenderSpinner;
 
     /**
@@ -103,32 +104,38 @@ public class EditorActivity extends AppCompatActivity {
         String nameString = mNameEditText.getText().toString().trim();
         String breedString = mBreedEditText.getText().toString().trim();
         String weightString = mWeightEditText.getText().toString().trim();
-        int weight = Integer.parseInt(weightString);
+        int weight = 0; //Initialize Default value of weight to 0
 
-        // Create database helper
-        PetsDbHelper mDbHelper = new PetsDbHelper(this);
+        if(nameString.isEmpty()){Toast.makeText(this,"Name field can't be empty",Toast.LENGTH_SHORT).show();}
+        /*else if( weightString.isEmpty() ){Toast.makeText(this,"Weight field can't be empty",Toast.LENGTH_SHORT).show();}*/
+        else {
+            if (breedString.isEmpty()){breedString = "UNKNOWN";}
+            if( !weightString.isEmpty()){weight = Integer.parseInt(weightString);} //To prevent Number Format Exception in case of empty weight
+            // Create database helper
+            PetsDbHelper mDbHelper = new PetsDbHelper(this);
 
-        // Gets the database in write mode
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+            // Gets the database in write mode
+            SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
-        // Create a ContentValues object where column names are the keys,
-        // and pet attributes from the editor are the values.
-        ContentValues values = new ContentValues();
-        values.put(PetsEntry.COLUMN_PETS_NAME, nameString);
-        values.put(PetsEntry.COLUMN_PETS_BREED, breedString);
-        values.put(PetsEntry.COLUMN_PETS_GENDER, mGender);
-        values.put(PetsEntry.COLUMN_PETS_WEIGHT, weight);
+            // Create a ContentValues object where column names are the keys,
+            // and pet attributes from the editor are the values.
+            ContentValues values = new ContentValues();
+            values.put(PetsEntry.COLUMN_PETS_NAME, nameString);
+            values.put(PetsEntry.COLUMN_PETS_BREED, breedString);
+            values.put(PetsEntry.COLUMN_PETS_GENDER, mGender);
+            values.put(PetsEntry.COLUMN_PETS_WEIGHT, weight);
 
-        // Insert a new row for pet in the database, returning the ID of that new row.
-        long newRowId = db.insert(PetsEntry.TABLE_NAME, null, values);
+            // Insert a new row for pet in the database, returning the ID of that new row.
+            long newRowId = db.insert(PetsEntry.TABLE_NAME, null, values);
 
-        // Show a toast message depending on whether or not the insertion was successful
-        if (newRowId == -1) {
-            // If the row ID is -1, then there was an error with insertion.
-            Toast.makeText(this, "Error with saving pet", Toast.LENGTH_SHORT).show();
-        } else {
-            // Otherwise, the insertion was successful and we can display a toast with the row ID.
-            Toast.makeText(this, "Pet saved with row id: " + newRowId, Toast.LENGTH_SHORT).show();
+            // Show a toast message depending on whether or not the insertion was successful
+            if (newRowId == -1) {
+                // If the row ID is -1, then there was an error with insertion.
+                Toast.makeText(this, "Error with saving pet", Toast.LENGTH_SHORT).show();
+            } else {
+                // Otherwise, the insertion was successful and we can display a toast with the row ID.
+                Toast.makeText(this, "Pet saved with row id: " + newRowId, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

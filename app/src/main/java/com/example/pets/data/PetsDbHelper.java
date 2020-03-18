@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.pets.data.PetsContract.PetsEntry;
 
-import androidx.annotation.Nullable;
 
 public class PetsDbHelper extends SQLiteOpenHelper {
 

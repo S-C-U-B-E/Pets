@@ -29,8 +29,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.pets.data.PetsContract.PetsEntry;
-import com.example.pets.EditorActivity;
-import com.example.pets.R;
 import com.example.pets.data.PetsContract;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -96,14 +94,7 @@ public class CatalogActivity extends AppCompatActivity {
 
             try {
 
-                // Perform a query on the provider using the ContentResolver.
-                // Use the {@link PetEntry#CONTENT_URI} to access the pet data.
 
-                // Create a header in the Text View that looks like this:
-                //
-                // The pets table contains <number of rows in Cursor> pets.
-                // _id - name - breed - gender - weight
-                //
                 // In the while loop below, iterate through the rows of the cursor and display
                 // the information from each column in this order.
                 displayView.setText("The pets table contains " + cursor.getCount() + " pets.\n\n");
@@ -157,9 +148,7 @@ public class CatalogActivity extends AppCompatActivity {
         values.put(PetsEntry.COLUMN_PETS_GENDER, PetsEntry.GENDER_MALE);
         values.put(PetsEntry.COLUMN_PETS_WEIGHT, 7);
 
-        // Insert a new row for Toto into the provider using the ContentResolver.
-        // Use the {@link PetEntry#CONTENT_URI} to indicate that we want to insert
-        // into the pets database table.
+
         // Receive the new content URI that will allow us to access Toto's data in the future.
         try{
         Uri newUri = getContentResolver().insert(PetsEntry.CONTENT_URI, values);

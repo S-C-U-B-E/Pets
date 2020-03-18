@@ -2,6 +2,7 @@ package com.example.pets;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -106,17 +107,23 @@ public class EditorActivity extends AppCompatActivity {
         String weightString = mWeightEditText.getText().toString().trim();
         int weight = 0; //Initialize Default value of weight to 0
 
-        if(nameString.isEmpty()){Toast.makeText(this,"Name field can't be empty",Toast.LENGTH_SHORT).show();}
+        if (nameString.isEmpty()) {
+            Toast.makeText(this, "Name field can't be empty", Toast.LENGTH_SHORT).show();
+        }
         /*else if( weightString.isEmpty() ){Toast.makeText(this,"Weight field can't be empty",Toast.LENGTH_SHORT).show();}*/
         else {
-            if (breedString.isEmpty()){breedString = "UNKNOWN";}
-            if( !weightString.isEmpty()){weight = Integer.parseInt(weightString);} //To prevent Number Format Exception in case of empty weight
-            // Create database helper
+            if (breedString.isEmpty()) {
+                breedString = "UNKNOWN";
+            }
+            if (!weightString.isEmpty()) {
+                weight = Integer.parseInt(weightString);
+            } //To prevent Number Format Exception in case of empty weight
+          /*  // Create database helper
             PetsDbHelper mDbHelper = new PetsDbHelper(this);
 
             // Gets the database in write mode
             SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
+*/
             // Create a ContentValues object where column names are the keys,
             // and pet attributes from the editor are the values.
             ContentValues values = new ContentValues();
@@ -125,16 +132,21 @@ public class EditorActivity extends AppCompatActivity {
             values.put(PetsEntry.COLUMN_PETS_GENDER, mGender);
             values.put(PetsEntry.COLUMN_PETS_WEIGHT, weight);
 
-            // Insert a new row for pet in the database, returning the ID of that new row.
-            long newRowId = db.insert(PetsEntry.TABLE_NAME, null, values);
+           /* // Insert a new row for pet in the database, returning the ID of that new row.
+            long newRowId = db.insert(PetsEntry.TABLE_NAME, null, values);*/
+
+            // Insert a new pet into the provider, returning the content URI for the new pet.
+            Uri newUri = getContentResolver().insert(PetsEntry.CONTENT_URI, values);
 
             // Show a toast message depending on whether or not the insertion was successful
-            if (newRowId == -1) {
-                // If the row ID is -1, then there was an error with insertion.
-                Toast.makeText(this, "Error with saving pet", Toast.LENGTH_SHORT).show();
+            if (newUri == null) {
+                // If the new content URI is null, then there was an error with insertion.
+                Toast.makeText(this, getString(R.string.editor_insert_pet_failed),
+                        Toast.LENGTH_SHORT).show();
             } else {
-                // Otherwise, the insertion was successful and we can display a toast with the row ID.
-                Toast.makeText(this, "Pet saved with row id: " + newRowId, Toast.LENGTH_SHORT).show();
+                // Otherwise, the insertion was successful and we can display a toast.
+                Toast.makeText(this, getString(R.string.editor_insert_pet_successful),
+                        Toast.LENGTH_SHORT).show();
             }
         }
     }

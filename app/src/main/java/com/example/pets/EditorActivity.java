@@ -1,6 +1,7 @@
 package com.example.pets;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
@@ -44,6 +45,15 @@ public class EditorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
+
+        Intent intent = getIntent();
+        Uri currentPetUri = intent.getData();
+
+        if(currentPetUri== null){
+            setTitle(getString(R.string.editor_activity_title_new_pet));
+        }else{
+            setTitle(getString(R.string.editor_activity_title_edit_pet));
+        }
 
         mNameEditText = (EditText) findViewById(R.id.edit_pet_name);
         mBreedEditText = (EditText) findViewById(R.id.edit_pet_breed);

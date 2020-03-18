@@ -107,6 +107,11 @@ public class EditorActivity extends AppCompatActivity {
         String weightString = mWeightEditText.getText().toString().trim();
         int weight = 0; //Initialize Default value of weight to 0
 
+        /*INSTEAD OF MAKING SANITY CHECK IN THE PetProvider.Java by throwing Exceptions
+        * We can SIMPLY USE IF-ELSE while taking vales from field in EditorActivity
+        * And this also makes sense because this is the only UI for INPUT in our App
+        * (I guess we are not going to use the InsertDummyData anyomre after the App is Ready) */
+
         if (nameString.isEmpty()) {
             Toast.makeText(this, "Name field can't be empty", Toast.LENGTH_SHORT).show();
         }
@@ -135,18 +140,25 @@ public class EditorActivity extends AppCompatActivity {
            /* // Insert a new row for pet in the database, returning the ID of that new row.
             long newRowId = db.insert(PetsEntry.TABLE_NAME, null, values);*/
 
-            // Insert a new pet into the provider, returning the content URI for the new pet.
-            Uri newUri = getContentResolver().insert(PetsEntry.CONTENT_URI, values);
 
-            // Show a toast message depending on whether or not the insertion was successful
-            if (newUri == null) {
-                // If the new content URI is null, then there was an error with insertion.
-                Toast.makeText(this, getString(R.string.editor_insert_pet_failed),
-                        Toast.LENGTH_SHORT).show();
-            } else {
-                // Otherwise, the insertion was successful and we can display a toast.
-                Toast.makeText(this, getString(R.string.editor_insert_pet_successful),
-                        Toast.LENGTH_SHORT).show();
+
+            try {
+                // Insert a new pet into the provider, returning the content URI for the new pet.
+                Uri newUri = getContentResolver().insert(PetsEntry.CONTENT_URI, values);
+
+                // Show a toast message depending on whether or not the insertion was successful
+                if (newUri == null) {
+                    // If the new content URI is null, then there was an error with insertion.
+                    Toast.makeText(this, getString(R.string.editor_insert_pet_failed),
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    // Otherwise, the insertion was successful and we can display a toast.
+                    Toast.makeText(this, getString(R.string.editor_insert_pet_successful),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }catch (Exception e){
+                Toast.makeText( this ,"UNKNOWN URI PROVIDED ;" + e.toString(), Toast.LENGTH_LONG).show();
+
             }
         }
     }

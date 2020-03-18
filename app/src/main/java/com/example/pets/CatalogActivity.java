@@ -24,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -37,6 +38,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
  * Displays list of pets that were entered and stored in the app.
  */
 public class CatalogActivity extends AppCompatActivity {
+
+    private Cursor cursor = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +68,7 @@ public class CatalogActivity extends AppCompatActivity {
      * the pets database.
      */
     private void displayDatabaseInfo() {
+
         // Define a projection that specifies which columns from the database
         // you will actually use after this query.
         String[] projection = {
@@ -74,59 +78,70 @@ public class CatalogActivity extends AppCompatActivity {
                 PetsEntry.COLUMN_PETS_GENDER,
                 PetsEntry.COLUMN_PETS_WEIGHT };
 
-        // Perform a query on the provider using the ContentResolver.
-        // Use the {@link PetEntry#CONTENT_URI} to access the pet data.
-        Cursor cursor = getContentResolver().query(
-                PetsEntry.CONTENT_URI,   // The content URI of the words table
-                projection,             // The columns to return for each row
-                null,                   // Selection criteria
-                null,                   // Selection criteria
-                null);                  // The sort order for the returned rows
+        try {
+             cursor = getContentResolver().query(
+                    PetsEntry.CONTENT_URI,   // The content URI of the words table
+                    projection,             // The columns to return for each row
+                    null,                   // Selection criteria
+                    null,                   // Selection criteria
+                    null);                  // The sort order for the returned rows
+        }catch (Exception e){
+            Toast.makeText( this ,"UNKNOWN URI PROVIDED ;" + e.toString(), Toast.LENGTH_LONG).show();
+        }
 
         TextView displayView = (TextView) findViewById(R.id.text_view_pet);
 
-        try {
-            // Create a header in the Text View that looks like this:
-            //
-            // The pets table contains <number of rows in Cursor> pets.
-            // _id - name - breed - gender - weight
-            //
-            // In the while loop below, iterate through the rows of the cursor and display
-            // the information from each column in this order.
-            displayView.setText("The pets table contains " + cursor.getCount() + " pets.\n\n");
-            displayView.append(PetsEntry._ID + " - " +
-                    PetsEntry.COLUMN_PETS_NAME + " - " +
-                    PetsEntry.COLUMN_PETS_BREED + " - " +
-                    PetsEntry.COLUMN_PETS_GENDER + " - " +
-                    PetsEntry.COLUMN_PETS_WEIGHT + "\n");
 
-            // Figure out the index of each column
-            int idColumnIndex = cursor.getColumnIndex(PetsContract.PetsEntry._ID);
-            int nameColumnIndex = cursor.getColumnIndex(PetsEntry.COLUMN_PETS_NAME);
-            int breedColumnIndex = cursor.getColumnIndex(PetsEntry.COLUMN_PETS_BREED);
-            int genderColumnIndex = cursor.getColumnIndex(PetsEntry.COLUMN_PETS_GENDER);
-            int weightColumnIndex = cursor.getColumnIndex(PetsEntry.COLUMN_PETS_WEIGHT);
+        if(cursor != null) {
 
-            // Iterate through all the returned rows in the cursor
-            while (cursor.moveToNext()) {
-                // Use that index to extract the String or Int value of the word
-                // at the current row the cursor is on.
-                int currentID = cursor.getInt(idColumnIndex);
-                String currentName = cursor.getString(nameColumnIndex);
-                String currentBreed = cursor.getString(breedColumnIndex);
-                int currentGender = cursor.getInt(genderColumnIndex);
-                int currentWeight = cursor.getInt(weightColumnIndex);
-                // Display the values from each column of the current row in the cursor in the TextView
-                displayView.append(("\n" + currentID + " - " +
-                        currentName + " - " +
-                        currentBreed + " - " +
-                        currentGender + " - " +
-                        currentWeight));
+            try {
+
+                // Perform a query on the provider using the ContentResolver.
+                // Use the {@link PetEntry#CONTENT_URI} to access the pet data.
+
+                // Create a header in the Text View that looks like this:
+                //
+                // The pets table contains <number of rows in Cursor> pets.
+                // _id - name - breed - gender - weight
+                //
+                // In the while loop below, iterate through the rows of the cursor and display
+                // the information from each column in this order.
+                displayView.setText("The pets table contains " + cursor.getCount() + " pets.\n\n");
+                displayView.append(PetsEntry._ID + " - " +
+                        PetsEntry.COLUMN_PETS_NAME + " - " +
+                        PetsEntry.COLUMN_PETS_BREED + " - " +
+                        PetsEntry.COLUMN_PETS_GENDER + " - " +
+                        PetsEntry.COLUMN_PETS_WEIGHT + "\n");
+
+
+                // Figure out the index of each column
+                int idColumnIndex = cursor.getColumnIndex(PetsContract.PetsEntry._ID);
+                int nameColumnIndex = cursor.getColumnIndex(PetsEntry.COLUMN_PETS_NAME);
+                int breedColumnIndex = cursor.getColumnIndex(PetsEntry.COLUMN_PETS_BREED);
+                int genderColumnIndex = cursor.getColumnIndex(PetsEntry.COLUMN_PETS_GENDER);
+                int weightColumnIndex = cursor.getColumnIndex(PetsEntry.COLUMN_PETS_WEIGHT);
+
+                // Iterate through all the returned rows in the cursor
+                while (cursor.moveToNext()) {
+                    // Use that index to extract the String or Int value of the word
+                    // at the current row the cursor is on.
+                    int currentID = cursor.getInt(idColumnIndex);
+                    String currentName = cursor.getString(nameColumnIndex);
+                    String currentBreed = cursor.getString(breedColumnIndex);
+                    int currentGender = cursor.getInt(genderColumnIndex);
+                    int currentWeight = cursor.getInt(weightColumnIndex);
+                    // Display the values from each column of the current row in the cursor in the TextView
+                    displayView.append(("\n" + currentID + " - " +
+                            currentName + " - " +
+                            currentBreed + " - " +
+                            currentGender + " - " +
+                            currentWeight));
+                }
+            } finally {
+                // Always close the cursor when you're done reading from it. This releases all its
+                // resources and makes it invalid.
+                cursor.close();
             }
-        } finally {
-            // Always close the cursor when you're done reading from it. This releases all its
-            // resources and makes it invalid.
-            cursor.close();
         }
     }
 
@@ -146,7 +161,11 @@ public class CatalogActivity extends AppCompatActivity {
         // Use the {@link PetEntry#CONTENT_URI} to indicate that we want to insert
         // into the pets database table.
         // Receive the new content URI that will allow us to access Toto's data in the future.
+        try{
         Uri newUri = getContentResolver().insert(PetsEntry.CONTENT_URI, values);
+        }catch(Exception e){
+            Toast.makeText( this ,"UNKNOWN URI PROVIDED ;" + e.toString(), Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override

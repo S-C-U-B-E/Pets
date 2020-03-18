@@ -39,7 +39,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
  */
 public class CatalogActivity extends AppCompatActivity {
 
-    private Cursor cursor = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +68,7 @@ public class CatalogActivity extends AppCompatActivity {
      */
     private void displayDatabaseInfo() {
 
+         Cursor cursor = null;
         // Define a projection that specifies which columns from the database
         // you will actually use after this query.
         String[] projection = {
@@ -79,7 +79,7 @@ public class CatalogActivity extends AppCompatActivity {
                 PetsEntry.COLUMN_PETS_WEIGHT };
 
         try {
-             cursor = getContentResolver().query(
+              cursor = getContentResolver().query(
                     PetsEntry.CONTENT_URI,   // The content URI of the words table
                     projection,             // The columns to return for each row
                     null,                   // Selection criteria
